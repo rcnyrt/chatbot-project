@@ -1,13 +1,22 @@
 import streamlit as st
 from openai import OpenAI
 
-# Show title and description.
-st.title("💬 Chatbot")
-st.write(
-    "This is a simple chatbot that uses OpenAI's GPT-3.5 model to generate responses. "
-    "To use this app, you need to provide an OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys). "
-    "You can also learn how to build this app step by step by [following our tutorial](https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps)."
+# Update custom CSS to ensure the background color is applied correctly.
+st.markdown(
+    """
+    <style>
+    html, body, [data-testid="stAppViewContainer"] {
+        background-color: violet;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
 )
+
+# Show title and description.
+st.title("💬 My Chatbot")
+st.write(
+ "This is a simple chatbot that checks your horoscope of the week.")
 
 # Ask user for their OpenAI API key via `st.text_input`.
 # Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
@@ -24,6 +33,12 @@ else:
     # messages persist across reruns.
     if "messages" not in st.session_state:
         st.session_state.messages = []
+
+    # Modify the initial assistant response to focus on horoscopes.
+    if len(st.session_state.messages) == 0:
+        st.session_state.messages.append({"role": "assistant", "content": "Hello! Please tell me your sign so I can tell you your weekly horoscope!"})
+        with st.chat_message("assistant"):
+            st.markdown("Hello! Please tell me your sign so I can tell you your weekly horoscope!")
 
     # Display the existing chat messages via `st.chat_message`.
     for message in st.session_state.messages:
